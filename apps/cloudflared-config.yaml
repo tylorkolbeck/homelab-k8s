@@ -5,6 +5,8 @@ metadata:
   namespace: argocd
 data:
   config.yaml: |
+    tunnel: 0a34eb9a-78c0-4ab8-934c-efc911515c34
+    credentials-file: /etc/cloudflared/creds/credentials.json
     metrics: 0.0.0.0:20000
     ingress:
       - hostname: argocd.ghport.com
@@ -14,3 +16,41 @@ data:
       - hostname: hello.ghport.com
         service: http://hello-svc.default.svc.cluster.local:80
       - service: http_status:404
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  namespace: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflared
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+      - name: cloudflared
+        image: cloudflare/cloudflared:latest
+        args:
+        - tunnel
+        - --no-autoupdate
+        - run
+        - --config
+        - /etc/cloudflared/config/config.yaml
+        volumeMounts:
+        - name: config
+          mountPath: /etc/cloudflared/config
+        - name: creds
+          mountPath: /etc/cloudflared/creds
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: cloudflared-config
+      - name: creds
+        secret:
+          secretName: tunnel-credentials
