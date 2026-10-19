@@ -18,20 +18,19 @@ spec:
         image: cloudflare/cloudflared:latest
         args:
         - tunnel
-        - --no-autoupdate
-        - run
         - --config
-        - /etc/cloudflared/config/config.yaml  # <--- Point to the mounted config
-        env:
-        - name: TUNNEL_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: cloudflare-tunnel-secret
-              key: tun-token
+        - /etc/cloudflared/config/config.yaml
+        - run
         volumeMounts:
         - name: config
           mountPath: /etc/cloudflared/config
+        - name: creds
+          mountPath: /etc/cloudflared/creds
+          readOnly: true
       volumes:
       - name: config
         configMap:
           name: cloudflared-config
+      - name: creds
+        secret:
+          secretName: tunnel-credentials
