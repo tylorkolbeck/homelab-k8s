@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflared
+  namespace: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflared
+  template:
+    metadata:
+      labels:
+        app: cloudflared
+    spec:
+      containers:
+      - name: cloudflared
+        image: cloudflare/cloudflared:latest
+        args:
+        - tunnel
+        - --no-autoupdate
+        - run
+        - --config
+        - /etc/cloudflared/config/config.yaml  # <--- Point to the mounted config
+        env:
+        - name: TUNNEL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-tunnel-secret
+              key: tun-token
+        volumeMounts:
+        - name: config
+          mountPath: /etc/cloudflared/config
+      volumes:
+      - name: config
+        configMap:
+          name: cloudflared-config
