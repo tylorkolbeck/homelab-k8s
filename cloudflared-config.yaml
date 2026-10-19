@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: argocd
+data:
+  config.yaml: |
+    tunnel: 6e606e82-4398-43be-b9e8-3432f6a615a2
+    credentials-file: /etc/cloudflared/credentials.json
+    metrics: 0.0.0.0:20000
+    ingress:
+      # Automatically route hello-app to your public domain
+      - hostname: hello.ghport.com
+        service: http://hello-svc.default.svc.cluster.local:80
+      # Catch-all rule required at the end
+      - service: http_status:404
