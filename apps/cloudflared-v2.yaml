@@ -36,9 +36,9 @@ spec:
         args:
         - tunnel
         - --no-autoupdate
-        - run
         - --config
         - /etc/cloudflared/config/config.yaml
+        - run
         volumeMounts:
         - name: config
           mountPath: /etc/cloudflared/config
