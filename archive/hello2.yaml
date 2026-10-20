@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: hello2-app
   namespace: apps
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: hello2.ghport.com
+    external-dns.alpha.kubernetes.io/target: 0a34eb9a-78c0-4ab8-934c-efc911515c34.cfargotunnel.com
 spec:
   replicas: 1
   selector:
