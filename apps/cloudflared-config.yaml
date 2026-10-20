@@ -12,6 +12,8 @@ data:
       - hostname: argocd.ghport.com
         originRequest:
           noTLSVerify: true
+          originServerName: argocd-server.argocd.svc.cluster.local
+          http2Origin: true
         service: https://argocd-server.argocd.svc.cluster.local:443
       - hostname: hello.ghport.com
         service: http://hello-svc.default.svc.cluster.local:80
