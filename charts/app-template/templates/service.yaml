@@ -1,0 +1,32 @@
+{{- $targetPort := .Values.service.targetPort | default .Values.service.port -}}
+{{- $subdomain := .Values.dns.subdomain | default (include "app-template.name" .) -}}
+{{- $hostname := .Values.dns.hostname | default (printf "%s.%s" $subdomain .Values.global.domain) -}}
+{{- $proxied := .Values.global.cloudflare.proxied -}}
+{{- if ne .Values.dns.proxied nil -}}
+  {{- $proxied = .Values.dns.proxied -}}
+{{- end -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "app-template.serviceName" . }}
+  namespace: {{ include "app-template.namespace" . }}
+  labels:
+    {{- include "app-template.labels" . | nindent 4 }}
+  {{- if or .Values.dns.enabled .Values.service.annotations }}
+  annotations:
+    {{- if .Values.dns.enabled }}
+    external-dns.alpha.kubernetes.io/hostname: {{ $hostname | quote }}
+    external-dns.alpha.kubernetes.io/target: "{{ .Values.global.cloudflare.tunnelId }}.cfargotunnel.com"
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: {{ $proxied | quote }}
+    {{- end }}
+    {{- with .Values.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  selector:
+    {{- include "app-template.selectorLabels" . | nindent 4 }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ $targetPort }}

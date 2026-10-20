@@ -1,0 +1,5 @@
+apiVersion: v2
+name: cloudflared
+description: Cloudflare Tunnel connector and ingress routing ConfigMap
+type: application
+version: 0.1.0

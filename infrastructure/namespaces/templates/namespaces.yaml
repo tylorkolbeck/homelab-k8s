@@ -1,0 +1,11 @@
+{{- $namespaces := prepend .Values.namespaces .Values.global.appsNamespace | uniq -}}
+{{- range $ns := $namespaces }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $ns }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-options: Prune=false
+{{- end }}

@@ -1,0 +1,27 @@
+# Global fallbacks (overridden by values/global.yaml in ArgoCD)
+global:
+  domain: ghport.com
+  appsNamespace: apps
+  cloudflare:
+    tunnelId: 0a34eb9a-78c0-4ab8-934c-efc911515c34
+    credentialsSecret: tunnel-credentials
+
+namespace: argocd
+replicaCount: 1
+
+image:
+  repository: cloudflare/cloudflared
+  tag: latest
+  pullPolicy: IfNotPresent
+
+metricsAddr: 0.0.0.0:20000
+
+# Tunnel ingress routes.
+# For standard apps in `global.appsNamespace`, only `subdomain` is required!
+# It automatically routes `<subdomain>.<global.domain>` -> `http://<subdomain>-svc.<global.appsNamespace>.svc.cluster.local:80`
+# You can also override `serviceName`, `namespace`, `port`, or provide a full `service` URL.
+routes:
+  - subdomain: argocd
+    service: http://argocd-server.argocd.svc.cluster.local:80
+  - subdomain: hello
+  - subdomain: hello2

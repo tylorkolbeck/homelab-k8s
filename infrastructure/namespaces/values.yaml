@@ -1,0 +1,6 @@
+# Global fallbacks (overridden by values/global.yaml in ArgoCD)
+global:
+  appsNamespace: apps
+
+# Additional namespaces to create (global.appsNamespace is always included)
+namespaces: []

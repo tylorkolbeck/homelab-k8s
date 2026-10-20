@@ -1,0 +1,20 @@
+# Global cluster-wide variables shared across all infrastructure and workload Helm charts
+global:
+  # Base domain managed in Cloudflare
+  domain: ghport.com
+
+  # Default namespace for user applications
+  appsNamespace: apps
+
+  # Cloudflare Tunnel & API settings
+  cloudflare:
+    tunnelId: 0a34eb9a-78c0-4ab8-934c-efc911515c34
+    proxied: true
+    credentialsSecret: tunnel-credentials
+    apiTokenSecret: cloudflare-api-token
+    apiTokenKey: token
+
+  # External-DNS settings
+  externalDns:
+    registry: txt
+    txtOwnerId: k3s-gitops

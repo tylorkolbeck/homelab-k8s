@@ -1,0 +1,27 @@
+namespace: kube-system
+name: reloader-reloader
+replicaCount: 1
+revisionHistoryLimit: 2
+
+image:
+  repository: ghcr.io/stakater/reloader
+  tag: v1.4.14
+  pullPolicy: IfNotPresent
+
+httpPort: 9090
+
+resources:
+  limits:
+    cpu: "1"
+    memory: 512Mi
+  requests:
+    cpu: 10m
+    memory: 512Mi
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65534
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext: {}

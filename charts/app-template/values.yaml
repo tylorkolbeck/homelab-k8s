@@ -1,0 +1,85 @@
+# Default values for app-template.
+# Override only what you need in apps/<app-name>/values.yaml.
+
+# Global fallbacks (overridden by values/global.yaml in ArgoCD)
+global:
+  domain: ghport.com
+  appsNamespace: apps
+  cloudflare:
+    tunnelId: 0a34eb9a-78c0-4ab8-934c-efc911515c34
+    proxied: true
+
+# Optional override for the base application name (defaults to Helm release name)
+nameOverride: ""
+
+# Target namespace (defaults to global.appsNamespace)
+namespace: ""
+
+replicaCount: 1
+
+image:
+  repository: nginxdemos/hello
+  tag: plain-text
+  pullPolicy: IfNotPresent
+
+# Container name inside the Pod
+containerName: web
+
+# Optional command/args overrides
+command: []
+args: []
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  # Defaults to service.port if omitted
+  targetPort: ""
+  annotations: {}
+
+# Cloudflare External-DNS configuration
+dns:
+  enabled: false
+  # Defaults to the release name (e.g. <app-name>.<global.domain>)
+  subdomain: ""
+  # Optional full hostname override
+  hostname: ""
+  # Defaults to global.cloudflare.proxied
+  proxied: null
+
+# Automatic reload on ConfigMap/Secret changes via Stakater Reloader
+reloader:
+  auto: false
+
+# Environment variables (list of {name, value} or {name, valueFrom})
+env: []
+
+# Environment variables from ConfigMaps/Secrets
+envFrom: []
+
+# Optional PersistentVolumeClaim for stateful apps
+persistence:
+  enabled: false
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  mountPath: /data
+
+# Extra volumes and volumeMounts
+volumes: []
+volumeMounts: []
+
+# Resource requests and limits
+resources: {}
+  # requests:
+  #   cpu: 10m
+  #   memory: 64Mi
+  # limits:
+  #   cpu: 500m
+  #   memory: 256Mi
+
+livenessProbe: {}
+readinessProbe: {}
+
+podSecurityContext: {}
+securityContext: {}

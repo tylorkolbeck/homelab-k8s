@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: {{ .Values.namespace }}
+data:
+  config.yaml: |
+    tunnel: {{ .Values.global.cloudflare.tunnelId }}
+    credentials-file: /etc/cloudflared/creds/credentials.json
+    metrics: {{ .Values.metricsAddr }}
+    ingress:
+      {{- range .Values.routes }}
+      {{- $hostname := .hostname | default (printf "%s.%s" .subdomain $.Values.global.domain) }}
+      {{- $svcName := .serviceName | default (printf "%s-svc" .subdomain) }}
+      {{- $svcNs := .namespace | default $.Values.global.appsNamespace }}
+      {{- $svcPort := .port | default 80 }}
+      {{- $serviceUrl := .service | default (printf "http://%s.%s.svc.cluster.local:%v" $svcName $svcNs $svcPort) }}
+      - hostname: {{ $hostname }}
+        service: {{ $serviceUrl }}
+      {{- end }}
+      - service: http_status:404
