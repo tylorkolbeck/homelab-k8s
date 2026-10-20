@@ -27,6 +27,7 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: hello2.ghport.com
     external-dns.alpha.kubernetes.io/target: 0a34eb9a-78c0-4ab8-934c-efc911515c34.cfargotunnel.com
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
 spec:
   type: ClusterIP
   selector:
