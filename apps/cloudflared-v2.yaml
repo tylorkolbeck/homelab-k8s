@@ -13,6 +13,8 @@ data:
         service: http://argocd-server.argocd.svc.cluster.local:80
       - hostname: hello.ghport.com
         service: http://hello-svc.apps.svc.cluster.local:80
+      - hostname: hello2.ghport.com
+        service: http://hello2-svc.apps.svc.cluster.local:80
       - service: http_status:404
 ---
 apiVersion: apps/v1
